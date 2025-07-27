@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	gw "github.com/obaibula/friends/proto"
@@ -21,8 +22,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	srv := &http.Server{
+		Addr:         ":8081",
+		Handler:      mux,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
 	log.Println("http listening on 8081")
-	err = http.ListenAndServe(":8081", mux)
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}
