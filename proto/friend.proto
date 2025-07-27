@@ -1,0 +1,41 @@
+syntax = "proto3";
+package friend;
+option go_package = "friends/proto;friend";
+
+import "google/api/annotations.proto";
+
+message AddFriendRequest {
+  string from = 1;
+  string to = 2;
+}
+
+message AddFriendResponse {
+  string message = 1;
+}
+
+message MutualFriendsRequest {
+  string user1 = 1;
+  string user2 = 2;
+}
+
+message MutualFriendsResponse {
+  repeated string mutual_friends = 1;
+}
+
+service FriendService {
+  rpc AddFriend(AddFriendRequest) returns (AddFriendResponse) {
+    option (google.api.http) = {
+      post: "/add-friend"
+      body: "*"
+    };
+  };
+  rpc GetMutualFriends(MutualFriendsRequest) returns (MutualFriendsResponse) {
+    option (google.api.http) = {
+      get: "/mutual-friends"
+      additional_bindings {
+        get: "/mutual-friends/{user1}/{user2}"
+      }
+    };
+  };
+}
+
