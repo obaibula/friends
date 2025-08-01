@@ -33,7 +33,7 @@ func main() {
 	srv := grpc.NewServer()
 	defer srv.GracefulStop()
 
-	pb.RegisterFriendServiceServer(srv, NewFriendServer(g))
+	pb.RegisterFriendServiceServer(srv, NewFriendService(g))
 
 	lis, err := net.Listen("tcp", ":8080")
 	if err != nil {

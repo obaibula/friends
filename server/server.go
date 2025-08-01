@@ -7,16 +7,16 @@ import (
 	pb "github.com/obaibula/friends/proto"
 )
 
-type FriendServer struct {
+type FriendService struct {
 	pb.UnimplementedFriendServiceServer
 	Graph *Graph
 }
 
-func NewFriendServer(g *Graph) *FriendServer {
-	return &FriendServer{Graph: g}
+func NewFriendService(g *Graph) *FriendService {
+	return &FriendService{Graph: g}
 }
 
-func (s *FriendServer) AddFriend(ctx context.Context, req *pb.AddFriendRequest) (*pb.AddFriendResponse, error) {
+func (s *FriendService) AddFriend(ctx context.Context, req *pb.AddFriendRequest) (*pb.AddFriendResponse, error) {
 	err := s.Graph.AddFriend(ctx, req.GetFrom(), req.GetTo())
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func (s *FriendServer) AddFriend(ctx context.Context, req *pb.AddFriendRequest) 
 	return &pb.AddFriendResponse{Message: fmt.Sprintf("%q added %q to friends", req.From, req.To)}, nil
 }
 
-func (s *FriendServer) GetMutualFriends(ctx context.Context, req *pb.MutualFriendsRequest) (*pb.MutualFriendsResponse, error) {
+func (s *FriendService) GetMutualFriends(ctx context.Context, req *pb.MutualFriendsRequest) (*pb.MutualFriendsResponse, error) {
 	mutualFriends, err := s.Graph.GetMutualFriends(ctx, req.GetUser1(), req.GetUser2())
 	if err != nil {
 		return nil, err
